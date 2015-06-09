@@ -103,10 +103,9 @@ shinyServer(
     observeEvent(input$predictButton, {
       data<-read.csv("parameters.csv",
                      stringsAsFactors = FALSE)
-      output$main <- renderUI(
-        fluidRow(
-        )
-      )
+      output$main <- renderPlot({
+        plot(data$minpuiss, data$speed)
+      })
     })
     
   }      
