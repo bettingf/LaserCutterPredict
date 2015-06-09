@@ -1,10 +1,5 @@
 library(shiny)
 
-sellers<-read.csv("sellers.csv",
-                  stringsAsFactors = FALSE)
-material<-read.csv("material.csv",
-                   stringsAsFactors = FALSE)
-
 shinyUI(fluidPage(
     uiOutput("title"),
     sidebarLayout(  
@@ -15,9 +10,10 @@ shinyUI(fluidPage(
         uiOutput("ui")
       ),
       mainPanel(
-        p("output"),
-        plotOutput("plot"),
-        uiOutput("main")
+        tabsetPanel(  
+          tabPanel(textOutput("tabTable"), uiOutput("main")),
+          tabPanel(textOutput("tabGraph"), plotOutput("plot")),
+          tabPanel(textOutput("tabPredict"), uiOutput("predict")))
       )
     )
   )
