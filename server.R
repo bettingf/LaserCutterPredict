@@ -6,9 +6,6 @@ material<-read.csv("material.csv",
                    stringsAsFactors = FALSE)
 tr<-read.csv("translations.csv",
              stringsAsFactors = FALSE)
-con1 <- file("parameters.csv")
-data<-read.csv(con1,
-               stringsAsFactors = FALSE)
 
 
 
@@ -52,6 +49,8 @@ shinyServer(
       textInput("maxpuiss", 
                 trDisp("maxpuiss",input$lang)),
       hr(),     
+      actionButton("showButton", 
+                   trDisp("show",input$lang)),
       actionButton("addButton", 
                    trDisp("add",input$lang)),
       actionButton("predictButton", 
@@ -62,54 +61,9 @@ shinyServer(
     
     observeEvent(input$addButton, {
       
-      
-      print("add")
-      print(input$addButton)
-      print(input$predictButton)
-      
-      
-      t<-data.frame(date=input$date, 
-                    seller=input$seller, 
-                    material=input$material, 
-                    thickness=input$thickness, 
-                    speed=input$speed, 
-                    minpuiss=input$minpuiss, 
-                    maxpuiss=input$maxpuiss)
-      print(names(t))
-      print(dim(t))
-      print("----")
-      print(names(data))
-      print(dim(data))
-      
-      data2 <- data
-      data<-rbind(t,data2)
-      
-      con <- file("parameters.csv")
-      write.csv(data,con, row.names=FALSE)
-      
-      data<-NULL
-      con <- file("parameters.csv")
-      data<-read.csv(con,
+      data<-read.csv("parameters.csv",
                      stringsAsFactors = FALSE)
       
-      print(dim(data))
-      
-      output$main <- renderUI(
-        fluidRow(
-          renderTable(data)
-        )
-      )
-      
-      print(dim(data))
-    })
-    
-    observeEvent(input$predictButton, {
-      
-      print("predict")
-      print(input$addButton)
-      print(input$predictButton)
-      
-      
       t<-data.frame(date=input$date, 
                     seller=input$seller, 
                     material=input$material, 
@@ -117,23 +71,13 @@ shinyServer(
                     speed=input$speed, 
                     minpuiss=input$minpuiss, 
                     maxpuiss=input$maxpuiss)
-      print(names(t))
-      print(dim(t))
-      print("----")
-      print(names(data))
-      print(dim(data))
       
       data<-rbind(t,data)
       
-      con <- file("parameters.csv")
-      write.csv(data,con, row.names=FALSE)
+      write.csv(data,"parameters.csv", row.names=FALSE)
       
-      data<-NULL
-      con <- file("parameters.csv")
-      data<-read.csv(con,
+      data<-read.csv("parameters.csv",
                      stringsAsFactors = FALSE)
-      
-      print(dim(data))
       
       output$main <- renderUI(
         fluidRow(
@@ -141,7 +85,28 @@ shinyServer(
         )
       )
       
-      print(dim(data))
+    })
+    
+    observeEvent(input$showButton, {
+      
+      data<-read.csv("parameters.csv",
+                     stringsAsFactors = FALSE)
+      
+      output$main <- renderUI(
+        fluidRow(
+          renderTable(data)
+        )
+      )
+      
+    })
+    
+    observeEvent(input$predictButton, {
+      data<-read.csv("parameters.csv",
+                     stringsAsFactors = FALSE)
+      output$main <- renderUI(
+        fluidRow(
+        )
+      )
     })
     
   }      
