@@ -1,4 +1,6 @@
 library(shiny)
+library(ggplot2)
+library(reshape2)
 
 sellers<-read.csv("sellers.csv",
                   stringsAsFactors = FALSE)
@@ -30,24 +32,24 @@ shinyServer(
     output$ui <- renderUI(
       fluidRow(
       selectInput("seller", 
-                  trDisp("seller",input$lang), 
+                  trDisp("seller:",input$lang), 
                   choices = sellers$Sellers),
       selectInput("material", 
-                  trDisp("material",input$lang), 
+                  trDisp("material:",input$lang), 
                   choices = material$Materials),
       textInput("thickness", 
-                trDisp("thickness",input$lang)),
+                trDisp("thickness:",input$lang)),
       hr(),
       dateInput("date", 
-                trDisp("date",input$lang)),
+                trDisp("date:",input$lang)),
       textInput("speed", 
-                trDisp("speed",input$lang)),
+                trDisp("speed:",input$lang)),
       
       textInput("minpuiss", 
-                trDisp("minpuiss",input$lang)),
+                trDisp("minpuiss:",input$lang)),
       
       textInput("maxpuiss", 
-                trDisp("maxpuiss",input$lang)),
+                trDisp("maxpuiss:",input$lang)),
       hr(),     
       actionButton("showButton", 
                    trDisp("show",input$lang)),
@@ -64,20 +66,25 @@ shinyServer(
       data<-read.csv("parameters.csv",
                      stringsAsFactors = FALSE)
       
-      t<-data.frame(date=input$date, 
+      t<-data.frame(date=toString(input$date), 
                     seller=input$seller, 
                     material=input$material, 
                     thickness=input$thickness, 
                     speed=input$speed, 
                     minpuiss=input$minpuiss, 
                     maxpuiss=input$maxpuiss)
+      str(t)
+      str(data)
+      data<-rbind(data,t)
       
-      data<-rbind(t,data)
-      
+      str(data)
       write.csv(data,"parameters.csv", row.names=FALSE)
       
       data<-read.csv("parameters.csv",
                      stringsAsFactors = FALSE)
+      
+      names(data) <- sapply(names(data), 
+          function(x) { trDisp(x,input$lang)})
       
       output$main <- renderUI(
         fluidRow(
@@ -92,6 +99,9 @@ shinyServer(
       data<-read.csv("parameters.csv",
                      stringsAsFactors = FALSE)
       
+      names(data) <- sapply(names(data), 
+                            function(x) { trDisp(x,input$lang)})
+      
       output$main <- renderUI(
         fluidRow(
           renderTable(data)
@@ -103,8 +113,11 @@ shinyServer(
     observeEvent(input$predictButton, {
       data<-read.csv("parameters.csv",
                      stringsAsFactors = FALSE)
-      output$main <- renderPlot({
-        plot(data$minpuiss, data$speed)
+      d<-data[data$material==input$material&data$thickness==input$thickness,]
+      dMelt<-melt(d,measure.vars=c("minpuiss", "maxpuiss"), id.vars=c("speed"))           
+      
+      output$plot <- renderPlot({
+        qplot(speed, value, data=dMelt, col=variable, geom=c("point", "smooth"), method="lm",xlab="vitesse", ylab="puissance")
       })
     })
     
