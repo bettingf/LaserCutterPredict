@@ -13,21 +13,27 @@ tr<-read.csv("translations.csv",
 
 
 
+
+
 trDisp <- function(id, lang) {
   tr[tr$id==id,lang]
 }
 
-showAndPredict <- function(input, output) {
+showAndPredict <- function(input, output, session) {
   
-  data<-read.csv("parameters.csv",
+  data2<-read.csv("parameters.csv",
                  stringsAsFactors = FALSE)
   
-  names(data) <- sapply(names(data), 
+  # Order the data by material, thickness and then cut type.
+  data2<-data2[order(data2$material, data2$thickness, data2$cuttype),]
+  
+  names(data2) <- lapply(names(data2), 
                         function(x) { trDisp(x,input$lang)})
+  
   
   output$main <- renderUI(
     fluidRow(
-      renderTable(data)
+      renderTable(data2)
     )
   )
   
@@ -50,11 +56,40 @@ showAndPredict <- function(input, output) {
           
   })
   
+  minFit<-lm(min~speed, data = d)
+  maxFit<-lm(max~speed, data = d)
+  speeds<-c(seq(10,100,10),seq(200,1000,100))
+  mins<-predict(minFit, newdata = data.frame(speed=speeds))
+  maxs<-predict(maxFit, newdata = data.frame(speed=speeds))
+  data3<-data.frame(speed=speeds, minpuiss=mins, maxpuiss=maxs)
+  
+  # keep only the meaningful values (100>=power>=10 and max>=min)
+  data3<- data3[data3$maxpuiss<=100&data3$maxpuiss>=data3$minpuiss&data3$minpuiss>=10,]
+  
+  names(data3)<-lapply(names(data3), 
+                       function(x) { trDisp(x,input$lang)})
+  
+  dMed <- d[d$speed == median(d$speed),]
+  names(dMed)<-lapply(names(dMed), 
+                       function(x) { trDisp(x,input$lang)})
+  
   output$predict <- renderUI(
     fluidRow(
-      p(paste0(paste(input$cuttype,input$material,input$thickness),"mm"))
+      p(paste0(paste(input$cuttype,input$material,input$thickness),"mm")),
+      # means
+      h3(trDisp("meanvals:",input$lang)),
+      p(paste(trDisp("meanspeed:",input$lang), mean(d$speed, na.rm = TRUE))),
+      p(paste(trDisp("meanminpuiss:",input$lang), mean(d$min, na.rm = TRUE))),
+      p(paste(trDisp("meanmaxpuiss:",input$lang), mean(d$max, na.rm = TRUE))),
+      # values at median speed
+      h3(trDisp("medianvals:",input$lang)),
+      renderTable(dMed),
+      #predictions
+      h3(trDisp("powerneeded:",input$lang)),
+      renderTable(data3)
     )
   )
+  
   
 }
   
@@ -68,7 +103,7 @@ shinyServer(
     output$material <- renderTable(material)
     output$lang <- reactive({input$lang})
     output$tabGraph <- reactive({trDisp("graph", input$lang)})
-    output$tabTable <- reactive({trDisp("table", input$lang)})
+    output$tabData <- reactive({trDisp("data", input$lang)})
     output$tabPredict <- reactive({trDisp("prediction", input$lang)})
     
     #UI
@@ -130,12 +165,12 @@ shinyServer(
       write.csv(data,"parameters.csv", row.names=FALSE)
       
      
-      showAndPredict(input, output)
+      showAndPredict(input, output, session)
       
     })
     
     observeEvent(input$showButton, {
-      showAndPredict(input, output)
+      showAndPredict(input, output, session)
     })
     
   }      

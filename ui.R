@@ -1,5 +1,6 @@
 library(shiny)
 
+
 shinyUI(fluidPage(
     uiOutput("title"),
     sidebarLayout(  
@@ -11,9 +12,10 @@ shinyUI(fluidPage(
       ),
       mainPanel(
         tabsetPanel(  
-          tabPanel(textOutput("tabTable"), uiOutput("main")),
+          tabPanel(textOutput("tabPredict"), uiOutput("predict")),
           tabPanel(textOutput("tabGraph"), plotOutput("plot")),
-          tabPanel(textOutput("tabPredict"), uiOutput("predict")))
+          tabPanel(textOutput("tabData"), uiOutput("main"))
+        )
       )
     )
   )
