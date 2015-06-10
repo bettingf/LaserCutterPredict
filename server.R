@@ -19,6 +19,37 @@ trDisp <- function(id, lang) {
   tr[tr$id==id,lang]
 }
 
+predictByThickness <- function(input, output, session) {
+  
+  print("predictByThickness")
+  data<-read.csv("parameters.csv",
+                 stringsAsFactors = FALSE)
+  
+  d<-data[data$material==input$material&data$cuttype==input$cuttype,]
+  print(d)
+  speedFit<-lm(speed~thickness, data = d)
+  minFit<-lm(minpuiss~thickness, data = d)
+  maxFit<-lm(maxpuiss~thickness, data = d)
+  thicknesses<-seq(1,10,1)
+  speeds<-predict(speedFit, newdata = data.frame(thickness=thicknesses))
+  mins<-predict(minFit, newdata = data.frame(thickness=thicknesses))
+  maxs<-predict(maxFit, newdata = data.frame(thickness=thicknesses))
+  data2<-data.frame(thickness= thicknesses, speed=speeds, minpuiss=mins, maxpuiss=maxs)
+  # keep only the meaningful values (100>=power>=10 and max>=min)
+  data2<- data2[data2$maxpuiss<=100&data2$maxpuiss>=data2$minpuiss&data2$minpuiss>=10&data2$speed>0,]
+  
+  names(data2)<-lapply(names(data2), 
+                       function(x) { trDisp(x,input$lang)})
+  
+  output$predict <- renderUI(
+    fluidRow(
+      p(paste(input$cuttype,input$material)),
+      h3(trDisp("thicknesspredict:",input$lang)),
+      renderTable(data2)
+    )
+  )
+}
+
 showAndPredict <- function(input, output, session) {
   
   data2<-read.csv("parameters.csv",
@@ -73,7 +104,7 @@ showAndPredict <- function(input, output, session) {
   names(dMed)<-lapply(names(dMed), 
                        function(x) { trDisp(x,input$lang)})
   
-  output$predict <- renderUI(
+  output$param <- renderUI(
     fluidRow(
       p(paste0(paste(input$cuttype,input$material,input$thickness),"mm")),
       # means
@@ -105,6 +136,7 @@ shinyServer(
     output$tabGraph <- reactive({trDisp("graph", input$lang)})
     output$tabData <- reactive({trDisp("data", input$lang)})
     output$tabPredict <- reactive({trDisp("prediction", input$lang)})
+    output$tabParam <- reactive({trDisp("param", input$lang)})
     
     #UI
     output$title <- renderUI(
@@ -164,12 +196,14 @@ shinyServer(
       str(data)
       write.csv(data,"parameters.csv", row.names=FALSE)
       
-     
+      
+      predictByThickness(input, output, session)
       showAndPredict(input, output, session)
       
     })
     
     observeEvent(input$showButton, {
+      predictByThickness(input, output, session)
       showAndPredict(input, output, session)
     })
     

@@ -26,6 +26,7 @@
 "table","Table","Tableau"
 "data","Data","Donnees"
 "prediction","Prediction","Prediction"
+"param","Parameters","Parametres"
 "power","power","puissance"
 "meanvals:","Mean values :","Valeures moyennes :"
 "medianvals:","Power values at median speed :","Puissances a la vitesse mediane :"
@@ -33,3 +34,4 @@
 "meanminpuiss:","Mean of minimum power :", "Moyenne des puissances minimales :"
 "meanmaxpuiss:", "Mean of maximum power :", "Moyenne des puissances maximales :"
 "powerneeded:", "Power needed :", "Puissance necessaire :"
+"thicknesspredict:", "Prediction by thickness :", "Prediction par epaisseur :"

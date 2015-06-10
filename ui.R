@@ -13,6 +13,7 @@ shinyUI(fluidPage(
       mainPanel(
         tabsetPanel(  
           tabPanel(textOutput("tabPredict"), uiOutput("predict")),
+          tabPanel(textOutput("tabParam"), uiOutput("param")),
           tabPanel(textOutput("tabGraph"), plotOutput("plot")),
           tabPanel(textOutput("tabData"), uiOutput("main"))
         )
