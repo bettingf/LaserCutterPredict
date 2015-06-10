@@ -21,12 +21,11 @@ trDisp <- function(id, lang) {
 
 predictByThickness <- function(input, output, session) {
   
-  print("predictByThickness")
   data<-read.csv("parameters.csv",
                  stringsAsFactors = FALSE)
   
-  d<-data[data$material==input$material&data$cuttype==input$cuttype,]
-  print(d)
+  d<-data[data$material==input$material&data$cuttype==input$cuttype&!is.na(data$minpuiss)&!is.na(data$maxpuiss),]
+ 
   speedFit<-lm(speed~thickness, data = d)
   minFit<-lm(minpuiss~thickness, data = d)
   maxFit<-lm(maxpuiss~thickness, data = d)
@@ -58,9 +57,11 @@ showAndPredict <- function(input, output, session) {
   # Order the data by material, thickness and then cut type.
   data2<-data2[order(data2$material, data2$thickness, data2$cuttype),]
   
+  # check if it's needed
+  data2<-data2[!is.na(data2$minpuiss)&!is.na(data2$maxpuiss),]
+  
   names(data2) <- lapply(names(data2), 
                         function(x) { trDisp(x,input$lang)})
-  
   
   output$main <- renderUI(
     fluidRow(
@@ -71,9 +72,11 @@ showAndPredict <- function(input, output, session) {
   data<-read.csv("parameters.csv",
                  stringsAsFactors = FALSE)
   
-  d<-data[data$material==input$material&data$thickness==input$thickness&data$cuttype==input$cuttype,]
+  d<-data[data$material==input$material&data$thickness==input$thickness&data$cuttype==input$cuttype&!is.na(data$minpuiss)&!is.na(data$maxpuiss),]
   names(d)<-c("date","seller","material","thickness","cuttype","speed","min","max")
   
+  if (dim(d)[[1]]>1)
+  {
   dMelt<-melt(d,measure.vars=c("min", "max"), id.vars=c("speed"))
   
   output$plot <- renderPlot({
@@ -120,7 +123,7 @@ showAndPredict <- function(input, output, session) {
       renderTable(data3)
     )
   )
-  
+  }
   
 }
   

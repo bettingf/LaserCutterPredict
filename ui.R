@@ -3,7 +3,7 @@ library(shiny)
 
 shinyUI(fluidPage(
     uiOutput("title"),
-    helpText(a("Help", href="LaserCuttingPredict.html")),
+    helpText(a("Help", href="http://bettingf.github.io/LaserCutterPredict/LaserCuttingPredict.html")),
     sidebarLayout(  
       sidebarPanel(
         radioButtons("lang", "Language :",
