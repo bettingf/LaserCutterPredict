@@ -1,0 +1,21 @@
+---
+title: "Laser Cutting Predictor - User Manual"
+author: "Franck Bettinger"
+date: "Wednesday, June 10, 2015"
+output: html_document
+---
+
+## Introduction
+
+The application deals with the task of predicting the parameters that need to be used for a laser cutter, depending on the material to cut.
+
+3 parameters need to be set on the Laser Cutter for a material :
+* the cutting speed (denoted by speed)
+* the minimum power the laser cutter has to use, for curves (denoted by minimum power)
+* the maximum power the laser cutter has to use, for straight lines (denoted by maximum power)
+
+The application simplifies the task of setting those parameters by keeping parameters from previously cut materials and predicting parameters for new materials.
+
+## Layout of the screen
+
+
