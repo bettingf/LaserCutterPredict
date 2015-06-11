@@ -11,10 +11,6 @@ cuttypes<-read.csv("cuttypes.csv",
 tr<-read.csv("translations.csv",
              stringsAsFactors = FALSE)
 
-
-
-
-
 trDisp <- function(id, lang) {
   tr[tr$id==id,lang]
 }
@@ -140,7 +136,25 @@ shinyServer(
     output$tabData <- reactive({trDisp("data", input$lang)})
     output$tabPredict <- reactive({trDisp("prediction", input$lang)})
     output$tabParam <- reactive({trDisp("param", input$lang)})
-    
+    output$downloadData <- downloadHandler(
+      filename = function() {
+        paste('laserParams', Sys.Date(), '.csv', sep='')
+      },
+      content = function(file) {
+        data<-read.csv("parameters.csv",
+                       stringsAsFactors = FALSE)
+        write.csv(data, file)
+      }
+    )
+    output$downloadHelp <- downloadHandler(
+      filename = function() {
+        "LaserCuttingPredict.pdf"
+      },
+      content = function(file) {
+        file.copy("LaserCuttingPredict.pdf", file)
+      }
+    )
+      
     #UI
     output$title <- renderUI(
       titlePanel(trDisp("title", input$lang))

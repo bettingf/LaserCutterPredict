@@ -1,0 +1,1 @@
+Please, read the manual from the application.
