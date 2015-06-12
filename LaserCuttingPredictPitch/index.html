@@ -127,8 +127,27 @@
     <h2>Example of prediction by thickness</h2>
   </hgroup>
   <article data-timings="">
-    <pre><code>## Error in print(xtable(data2), type = &quot;html&quot;): could not find function &quot;xtable&quot;
-</code></pre>
+    <ol>
+<li>Example of computed values for a MDF cut</li>
+</ol>
+
+<!-- html table generated in R 3.2.0 by xtable 1.7-4 package -->
+
+<!-- Fri Jun 12 16:23:24 2015 -->
+
+<table border=1>
+<tr> <th>  </th> <th> Thickness </th> <th> Speed </th> <th> Minimum power </th> <th> Maximum power </th>  </tr>
+  <tr> <td align="right"> 2 </td> <td align="right"> 2.00 </td> <td align="right"> 21.56 </td> <td align="right"> 24.67 </td> <td align="right"> 32.78 </td> </tr>
+  <tr> <td align="right"> 3 </td> <td align="right"> 3.00 </td> <td align="right"> 26.67 </td> <td align="right"> 40.00 </td> <td align="right"> 48.33 </td> </tr>
+  <tr> <td align="right"> 4 </td> <td align="right"> 4.00 </td> <td align="right"> 31.78 </td> <td align="right"> 55.33 </td> <td align="right"> 63.89 </td> </tr>
+  <tr> <td align="right"> 5 </td> <td align="right"> 5.00 </td> <td align="right"> 36.89 </td> <td align="right"> 70.67 </td> <td align="right"> 79.44 </td> </tr>
+  <tr> <td align="right"> 6 </td> <td align="right"> 6.00 </td> <td align="right"> 42.00 </td> <td align="right"> 86.00 </td> <td align="right"> 95.00 </td> </tr>
+   </table>
+
+<ul>
+<li><p>Values above 6mm are not show because the laser cutter is not powerful enough to cut above. No need to try -&gt; saves time and material.</p></li>
+<li><p>The tickness value of 1mm is not shown because the linera regression gives a minimum power value less than the minimum the laser can deliver.</p></li>
+</ul>
 
   </article>
   <!-- Presenter Notes -->

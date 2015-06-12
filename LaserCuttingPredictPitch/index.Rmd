@@ -83,11 +83,14 @@ library(reshape2)
 
 ## Example of prediction by thickness
 
-```{r, echo=FALSE, results='asis'}
+1. Example of computed values for a MDF cut
+
+```{r xtable, echo=FALSE, results='asis'}
+library(xtable)
 data<-read.csv("../parameters.csv",
                  stringsAsFactors = FALSE)
   
-  d<-data[data$material=="Peuplier - contreplaque" &data$cuttype=="Decoupe"&!is.na(data$minpuiss)&!is.na(data$maxpuiss),]
+  d<-data[data$material=="MDF" &data$cuttype=="Decoupe"&!is.na(data$minpuiss)&!is.na(data$maxpuiss),]
  
   speedFit<-lm(speed~thickness, data = d)
   minFit<-lm(minpuiss~thickness, data = d)
@@ -102,10 +105,14 @@ data<-read.csv("../parameters.csv",
   
   names(data2)<- c("Thickness", "Speed","Minimum power","Maximum power")
   
-  #data2
-print(xtable(data2), type = "html")
+
+  print(xtable(data2), type = "html")
 ```
 
+
+ * Values above 6mm are not show because the laser cutter is not powerful enough to cut above. No need to try -> saves time and material.
+
+ * The tickness value of 1mm is not shown because the linera regression gives a minimum power value less than the minimum the laser can deliver.
 
 
 
