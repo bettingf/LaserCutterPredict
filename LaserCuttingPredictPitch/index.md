@@ -1,14 +1,14 @@
 ---
-title       : LaserCutterPredict
-subtitle    : A new way to estimate laser cutter parameters.
-author      : Franck Bettinger
-framework   : io2012        # {io2012, html5slides, shower, dzslides, ...}
-highlighter : highlight.js  # {highlight.js, prettify, highlight}
-hitheme     : tomorrow      # 
-widgets     : []            # {mathjax, quiz, bootstrap}
-mode        : selfcontained # {standalone, draft}
-knit        : slidify::knit2slides
-
+title: "LaserCutterPredict"
+subtitle: "A new way to estimate laser cutter parameters."
+author: "Franck Bettinger"
+highlighter: highlight.js
+output: pdf_document
+knit: slidify::knit2slides
+mode: selfcontained
+hitheme: tomorrow
+framework: io2012
+widgets: []
 ---
 
 ## The problem
@@ -21,7 +21,7 @@ knit        : slidify::knit2slides
 3. When using differents materials
   * parameters are hard to remember
   * making a list could be long
-4. When using differents thicknesses
+4. When using different thicknesses
   * different power
   * different speed
 
@@ -62,7 +62,7 @@ knit        : slidify::knit2slides
 1. Example of computed values for a MDF cut
 
 <!-- html table generated in R 3.2.0 by xtable 1.7-4 package -->
-<!-- Fri Jun 12 16:23:24 2015 -->
+<!-- Sat Jun 13 19:47:49 2015 -->
 <table border=1>
 <tr> <th>  </th> <th> Thickness </th> <th> Speed </th> <th> Minimum power </th> <th> Maximum power </th>  </tr>
   <tr> <td align="right"> 2 </td> <td align="right"> 2.00 </td> <td align="right"> 21.56 </td> <td align="right"> 24.67 </td> <td align="right"> 32.78 </td> </tr>
@@ -75,7 +75,7 @@ knit        : slidify::knit2slides
 
  * Values above 6mm are not show because the laser cutter is not powerful enough to cut above. No need to try -> saves time and material.
 
- * The tickness value of 1mm is not shown because the linera regression gives a minimum power value less than the minimum the laser can deliver.
+ * The tickness value of 1mm is not shown because the linear regression gives a minimum power value less than the minimum the laser can deliver.
 
 
 
